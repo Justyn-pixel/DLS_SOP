@@ -66,7 +66,12 @@
             </aside>
 
             <main class="md:col-span-2 bg-gray-50 p-4 rounded-lg shadow min-h-[300px] md:min-h-[calc(100vh-250px)] flex flex-col">
-                <h2 id="sopTitle" class="text-2xl font-semibold text-gray-800 mb-4 pb-2 border-b border-gray-200">Select an SOP to view its content</h2>
+                <div class="flex justify-between items-center mb-4 pb-2 border-b border-gray-200">
+                    <h2 id="sopTitle" class="text-2xl font-semibold text-gray-800">Select an SOP to view its content</h2>
+                    <button id="closeSopButton" class="hidden bg-slate-500 hover:bg-slate-600 text-white text-xs font-semibold py-1 px-3 rounded-md transition duration-150">
+                        Close
+                    </button>
+                </div>
                 <div id="sopContent" class="sop-content-area flex-grow overflow-y-auto whitespace-pre-wrap text-gray-700 bg-white p-3 rounded-md border border-gray-200">
                     <p class="text-gray-400">SOP content will appear here.</p>
                 </div>
@@ -76,11 +81,10 @@
 
     <script type="module">
         // --- GitHub Configuration ---
-        // IMPORTANT: Replace these with your GitHub repository details
-        const GITHUB_REPO_OWNER = "Justyn-pixel"; // e.g., "octocat"
-        const GITHUB_REPO_NAME = "DLS_SOP";       // e.g., "SOP-docs"
-        const GITHUB_SOPS_FOLDER_PATH = "sops"; // Path to the folder in your repo containing .txt SOPs, e.g., "docs/sops" or "" for root
-        const GITHUB_BRANCH = "main"; // Or your default branch, e.g., "master"
+        const GITHUB_REPO_OWNER = "YOUR_GITHUB_USERNAME_OR_ORG";
+        const GITHUB_REPO_NAME = "YOUR_REPOSITORY_NAME";
+        const GITHUB_SOPS_FOLDER_PATH = "sops";
+        const GITHUB_BRANCH = "main";
 
         // --- UI Elements ---
         const sopListContainer = document.getElementById('sopListContainer');
@@ -88,9 +92,19 @@
         const sopListLoader = document.getElementById('sopListLoader');
         const sopTitleElement = document.getElementById('sopTitle');
         const sopContentElement = document.getElementById('sopContent');
+        const closeSopButton = document.getElementById('closeSopButton');
 
+        // --- Initial Messages ---
+        const initialSopTitle = "Select an SOP to view its content";
+        const initialSopContentHTML = '<p class="text-gray-400">SOP content will appear here.</p>';
 
-        // --- Initialization ---
+        // --- Functions ---
+        function resetSopDisplay() {
+            sopTitleElement.textContent = initialSopTitle;
+            sopContentElement.innerHTML = initialSopContentHTML;
+            closeSopButton.classList.add('hidden');
+        }
+
         async function initializeApp() {
             if (GITHUB_REPO_OWNER === "YOUR_GITHUB_USERNAME_OR_ORG" || GITHUB_REPO_NAME === "YOUR_REPOSITORY_NAME") {
                 sopListPlaceholder.textContent = "Please configure GitHub repository details in the script.";
@@ -98,15 +112,16 @@
                 console.error("GitHub repository details not configured.");
                 return;
             }
+            closeSopButton.addEventListener('click', resetSopDisplay);
+            resetSopDisplay(); // Set initial state
             await loadSopsFromGitHub();
         }
 
-        // --- GitHub API Fetch Logic ---
         async function loadSopsFromGitHub() {
             sopListLoader.classList.remove('hidden');
             sopListPlaceholder.textContent = "Fetching SOPs from GitHub...";
             sopListPlaceholder.classList.remove('hidden');
-            sopListContainer.innerHTML = ''; // Clear previous list
+            sopListContainer.innerHTML = ''; 
 
             const apiUrl = `https://api.github.com/repos/${GITHUB_REPO_OWNER}/${GITHUB_REPO_NAME}/contents/${GITHUB_SOPS_FOLDER_PATH}?ref=${GITHUB_BRANCH}`;
 
@@ -117,9 +132,8 @@
                     throw new Error(`GitHub API Error: ${response.status} ${errorData.message || ''}`);
                 }
                 const files = await response.json();
-
-                sopListContainer.innerHTML = ''; // Clear loader and placeholder text
-                const txtFiles = files.filter(file => file.type === "file" && file.name.endsWith(".txt"));
+                sopListContainer.innerHTML = ''; 
+                const txtFiles = files.filter(file => file.type === "file" && file.name.endsWith(".txt")); // Still filtering for .txt
 
                 if (txtFiles.length === 0) {
                     sopListPlaceholder.textContent = `No .txt files found in the '${GITHUB_SOPS_FOLDER_PATH || 'root'}' folder.`;
@@ -155,13 +169,13 @@
             }
         }
 
-        // --- Display SOP Content ---
         async function displaySopContent(downloadUrl, sopName) {
             sopTitleElement.textContent = `Loading "${sopName}"...`;
-            sopContentElement.textContent = ''; 
+            sopContentElement.innerHTML = ''; // Clear previous content, including placeholder or actual content
             const contentLoader = document.createElement('div');
-            contentLoader.className = 'loader';
+            contentLoader.className = 'loader'; // Show loader while fetching
             sopContentElement.appendChild(contentLoader);
+            closeSopButton.classList.add('hidden'); // Hide close button while loading new content
 
 
             try {
@@ -171,17 +185,37 @@
                 }
                 const content = await response.text();
                 sopTitleElement.textContent = sopName;
-                sopContentElement.textContent = content; 
+                sopContentElement.textContent = content; // Display raw text
+                closeSopButton.classList.remove('hidden'); // Show close button now that content is loaded
             } catch (error) {
                 console.error("Error fetching SOP content:", error);
                 sopTitleElement.textContent = `Error Loading: ${sopName}`;
-                sopContentElement.textContent = `Could not load SOP content: ${error.message}`;
+                sopContentElement.innerHTML = `<p class="text-red-500">Could not load SOP content: ${error.message}</p>`; // Display error in content area
+                closeSopButton.classList.remove('hidden'); // Show close button even on error to allow closing the error message
             }
         }
-
-        // --- Start the application ---
+        
         initializeApp();
-
     </script>
 </body>
 </html>
+```
+
+**Changes Made for the "Close" Button:**
+1.  **HTML:**
+    * Added a "Close" button (`id="closeSopButton"`) next to the `sopTitle`. It's styled with Tailwind CSS and initially hidden using the `hidden` class. I used `bg-slate-500` for a neutral close button color; you can change this (e.g., to `bg-red-500` if you prefer).
+2.  **JavaScript:**
+    * Got a reference to `closeSopButton`.
+    * Created `initialSopTitle` and `initialSopContentHTML` constants to store the default placeholder messages.
+    * Created a `resetSopDisplay()` function that sets the title and content back to their initial placeholder state and hides the close button.
+    * In `initializeApp()`:
+        * The `resetSopDisplay()` function is called to set the initial state of the content panel.
+        * An event listener is added to `closeSopButton` to call `resetSopDisplay()` when clicked.
+    * In `displaySopContent()`:
+        * The `closeSopButton` is made visible (`classList.remove('hidden')`) after the SOP content is successfully loaded or if an error occurs while loading (so you can "close" an error message too).
+        * It's explicitly hidden (`classList.add('hidden')`) when starting to load new content.
+        * Used `sopContentElement.innerHTML = '';` at the start of `displaySopContent` to ensure the loader doesn't append to old content, and set proper error message HTML.
+
+Now, when you select an SOP, a "Close" button will appear. Clicking it will revert the content display area to its original state.
+
+Please review this, and then let me know how you'd like to proceed regarding `.docx` or Markdown suppo
