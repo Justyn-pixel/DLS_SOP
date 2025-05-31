@@ -2,193 +2,248 @@ Standard Operating Procedure: Drone Data Processing in Trimble Business Center (
 Document Version: 1.0
 Date: May 30, 2025
 Purpose: To outline the standard workflow for processing unmanned aerial system (UAS) / drone data to generate orthomosaics and point clouds using Trimble Business Center, with a focus on projects requiring a local coordinate system.
+
 1.0 Project Setup and Coordinate System Configuration
-1.1 Create New Project
-Launch Trimble Business Center.
-On the Start Page, click New Project.
-Select the appropriate project template. If using a custom local system frequently, consider creating a template with this system predefined.
-Default templates (e.g., "US Survey Foot" or "Metric") can be used as a starting point.
-Enter a Project Name and define the Project Folder location.
-Click OK.
-1.2 Configure Coordinate System (Local System)
-This is a critical step for ensuring survey accuracy and compatibility with local site requirements.
-1.2.1 If Importing a Pre-defined Local Coordinate System (e.g., from a JXL, DC, CFG, or GlobalFeatures.fxl file):
-Go to the Project Settings (often accessible via the "Home" tab or by right-clicking the project name in Project Explorer).
-Navigate to the Coordinate System section.
-Click Change.
-In the Coordinate System Manager, select Import from File or browse the library if the local system was previously added.
-For JXL/DC/CFG: Choose the appropriate file type and navigate to your coordinate system definition file.
-For GlobalFeatures.fxl: Ensure this file is in the correct TBC support folder (C:\ProgramData\Trimble\Trimble Business Center\GeoData) and the system should appear in the library.
-Verify the imported parameters (Projection, Datum, Geoid Model if applicable, Site Calibration if part of the file).
-Click Finish and OK.
-1.2.2 If Defining a New Local Coordinate System Manually (e.g., Assumed Coordinates, Ground Scale):
-Go to Project Settings > Coordinate System.
-Click Change.
-In the Coordinate System Manager, you might start with a known system (e.g., a State Plane zone) if your local system is a modification of it, or select "No Projection / No Datum" for a purely local ground system.
-For a Scaled and Oriented Local System (common method):
-It's often best to establish the local system based on surveyed control points.
-You will typically perform a Site Calibration after importing your ground control data (see Section 2.2). This process mathematically derives the local system parameters based on the relationship between global (e.g., WGS84 from drone) and local coordinates of your GCPs.
-Alternatively, if you have known parameters for a projection (e.g., Transverse Mercator) and datum transformation, you can define these manually:
-Click New to create a new coordinate system definition.
-Select Projection, Datum (potentially creating a new local datum), and Geoid Model (if elevations are orthometric).
-Projection: Choose the appropriate type (e.g., Transverse Mercator, Lambert Conformal Conic) and enter all parameters (Origin Latitude/Longitude, Central Meridian, False Northing/Easting, Scale Factor).
-Datum: If a local datum is needed, define it by specifying the transformation parameters from a known datum (e.g., WGS84 or NAD83) or by defining a new ellipsoid.
-Geoid Model: Select "No Geoid Model" if working with ellipsoidal heights or if a geoid is not applicable to your local system. Otherwise, select an appropriate model or import one.
-For an Assumed Coordinate System (No Projection / No Datum):
-Select "No Projection / No Datum."
-You will typically use a Site Calibration (see Section 2.2) to align the project to your local control, or manually key in coordinates for control points.
-Give your new coordinate system a descriptive name.
-Click Finish and OK.
-Important Note on Local Systems: If your drone data is in WGS84 (typical) and your GCPs are in a local system, a Site Calibration is the most robust way to link them accurately. The following steps assume this common workflow.
+
+    1.1 Create New Project
+        Launch Trimble Business Center. [cite: 2]
+        On the Start Page, click New Project . [cite: 3]
+        Select the appropriate project template. [cite: 3]
+            If using a custom local system frequently, consider creating a template with this system predefined. [cite: 4]
+            Default templates (e.g., "US Survey Foot" or "Metric") can be used as a starting point. [cite: 5]
+        Enter a Project Name and define the Project Folder location. [cite: 6]
+        Click OK . [cite: 6]
+
+    1.2 Configure Coordinate System (Local System)
+        This is a critical step for ensuring survey accuracy and compatibility with local site requirements. [cite: 7]
+
+        1.2.1 If Importing a Pre-defined Local Coordinate System (e.g., from a JXL, DC, CFG, or GlobalFeatures.fxl file):
+            Go to the Project Settings (often accessible via the "Home" tab or by right-clicking the project name in Project Explorer). [cite: 8]
+            Navigate to the Coordinate System section. [cite: 9]
+            Click Change . [cite: 9]
+            In the Coordinate System Manager, select Import from File or browse the library if the local system was previously added. [cite: 10]
+            For JXL/DC/CFG: Choose the appropriate file type and navigate to your coordinate system definition file. [cite: 11]
+            For GlobalFeatures.fxl: Ensure this file is in the correct TBC support folder (C:\ProgramData\Trimble\Trimble Business Center\GeoData) and the system should appear in the library. [cite: 12]
+            Verify the imported parameters (Projection, Datum, Geoid Model if applicable, Site Calibration if part of the file). [cite: 13]
+            Click Finish and OK . [cite: 14]
+
+        1.2.2 If Defining a New Local Coordinate System Manually (e.g., Assumed Coordinates, Ground Scale):
+            Go to Project Settings > Coordinate System . [cite: 14]
+            Click Change . [cite: 15]
+            In the Coordinate System Manager, you might start with a known system (e.g., a State Plane zone) if your local system is a modification of it, or select "No Projection / No Datum" for a purely local ground system. [cite: 15]
+            For a Scaled and Oriented Local System (common method):
+                It's often best to establish the local system based on surveyed control points. [cite: 16]
+                You will typically perform a Site Calibration after importing your ground control data (see Section 2.2). [cite: 17]
+                This process mathematically derives the local system parameters based on the relationship between global (e.g., WGS84 from drone) and local coordinates of your GCPs. [cite: 18]
+            Alternatively, if you have known parameters for a projection (e.g., Transverse Mercator) and datum transformation, you can define these manually: [cite: 19]
+                Click New to create a new coordinate system definition. [cite: 19]
+                Select Projection , Datum (potentially creating a new local datum), and Geoid Model (if elevations are orthometric). [cite: 20]
+                Projection: Choose the appropriate type (e.g., Transverse Mercator, Lambert Conformal Conic) and enter all parameters (Origin Latitude/Longitude, Central Meridian, False Northing/Easting, Scale Factor). [cite: 21]
+                Datum: If a local datum is needed, define it by specifying the transformation parameters from a known datum (e.g., WGS84 or NAD83) or by defining a new ellipsoid. [cite: 22]
+                Geoid Model: Select "No Geoid Model" if working with ellipsoidal heights or if a geoid is not applicable to your local system. [cite: 23]
+                Otherwise, select an appropriate model or import one. [cite: 24]
+            For an Assumed Coordinate System (No Projection / No Datum):
+                Select "No Projection / No Datum." [cite: 24]
+                You will typically use a Site Calibration (see Section 2.2) to align the project to your local control, or manually key in coordinates for control points. [cite: 25]
+            Give your new coordinate system a descriptive name. [cite: 26]
+            Click Finish and OK . [cite: 26]
+
+        Important Note on Local Systems: If your drone data is in WGS84 (typical) and your GCPs are in a local system, a Site Calibration is the most robust way to link them accurately. [cite: 27]
+        The following steps assume this common workflow. [cite: 28]
+
 2.0 Data Import
-2.1 Import Ground Control Points (GCPs)
-From the Home tab, click Import (or drag and drop the file into the Plan View).
-Navigate to your GCP file (e.g., .csv, .txt, .jxl).
-In the Import dialog:
-Verify the Importer Format (e.g., "Point Easting Northing Elevation Code"). If necessary, create or modify a format to match your file structure.
-Ensure the Coordinate System is set to your defined Local Coordinate System (from Step 1.2). If the GCPs are in a different system (e.g., WGS84), import them in that system first, then transform or use them for calibration. Best practice is to have GCPs in the final target local system.
-Check the preview to ensure data is being read correctly.
-Click Import.
-Verify the imported points in the Plan View and Project Explorer. Check their coordinates.
-2.2 Import Drone Imagery (and Trajectories if separate)
-Ensure your drone imagery (JPEGs) contains EXIF metadata with WGS84 coordinates (latitude, longitude, ellipsoidal height).
-Go to the Photogrammetry tab. (If not visible, you may need to enable it via Support > Options > Ribbon, or ensure your TBC license includes the Photogrammetry module).
-Click Import UAS Data.
-In the "Import UAS Data" wizard:
-Source Data:
-Click Add and navigate to the folder containing your drone images. Select all images.
-If you have a precise trajectory file (e.g., from PPK processing), you can add it here. Specify the format and coordinate system of the trajectory file.
-Camera Information:
-TBC will attempt to read camera information from EXIF data.
-Verify the Focal Length, Pixel Size, and Principal Point (cx, cy).
-If TBC does not have your camera in its database, you may need to create a new camera definition or ensure the EXIF data is complete.
-Photo Stations:
-Review the imported photo stations (camera locations). Their initial positions will be based on the EXIF WGS84 coordinates.
-Ensure the Coordinate System for the imported photo stations is correctly interpreted (usually WGS84 or the system of the PPK trajectory).
-Ground Control Points (for initial linking):
-This step allows for initial, rough association if your image tags or a separate file links images to GCPs. For manual GCP measurement (more common for high accuracy), you can often skip direct import here and measure in the next steps.
-Click Import. TBC will process the images and display the photo stations.
+
+    2.1 Import Ground Control Points (GCPs)
+        From the Home tab, click Import (or drag and drop the file into the Plan View). [cite: 28]
+        Navigate to your GCP file (e.g., .csv, .txt, .jxl). [cite: 29]
+        In the Import dialog:
+            Verify the Importer Format (e.g., "Point Easting Northing Elevation Code"). [cite: 29]
+            If necessary, create or modify a format to match your file structure. [cite: 30]
+            Ensure the Coordinate System is set to your defined Local Coordinate System (from Step 1.2). [cite: 31]
+            If the GCPs are in a different system (e.g., WGS84), import them in that system first, then transform or use them for calibration. [cite: 32]
+            Best practice is to have GCPs in the final target local system. [cite: 33]
+            Check the preview to ensure data is being read correctly. [cite: 34]
+        Click Import . [cite: 34]
+        Verify the imported points in the Plan View and Project Explorer. Check their coordinates. [cite: 35]
+
+    2.2 Import Drone Imagery (and Trajectories if separate)
+        Ensure your drone imagery (JPEGs) contains EXIF metadata with WGS84 coordinates (latitude, longitude, ellipsoidal height). [cite: 36]
+        Go to the Photogrammetry tab. (If not visible, you may need to enable it via Support > Options > Ribbon, or ensure your TBC license includes the Photogrammetry module). [cite: 37]
+        Click Import UAS Data . [cite: 38]
+        In the "Import UAS Data" wizard:
+            Source Data:
+                Click Add and navigate to the folder containing your drone images. [cite: 38]
+                Select all images. [cite: 39]
+                If you have a precise trajectory file (e.g., from PPK processing), you can add it here. [cite: 39]
+                Specify the format and coordinate system of the trajectory file. [cite: 40]
+            Camera Information:
+                TBC will attempt to read camera information from EXIF data. [cite: 41]
+                Verify the Focal Length , Pixel Size , and Principal Point (cx, cy). [cite: 42]
+                If TBC does not have your camera in its database, you may need to create a new camera definition or ensure the EXIF data is complete. [cite: 43]
+            Photo Stations:
+                Review the imported photo stations (camera locations). Their initial positions will be based on the EXIF WGS84 coordinates. [cite: 44]
+                Ensure the Coordinate System for the imported photo stations is correctly interpreted (usually WGS84 or the system of the PPK trajectory). [cite: 45]
+            Ground Control Points (for initial linking):
+                This step allows for initial, rough association if your image tags or a separate file links images to GCPs. [cite: 46]
+                For manual GCP measurement (more common for high accuracy), you can often skip direct import here and measure in the next steps. [cite: 47]
+            Click Import . TBC will process the images and display the photo stations. [cite: 48]
+
 3.0 Ground Control Point Measurement and Linking
-3.1 Access Adjust Photo Stations Command
-On the Photogrammetry tab, in the "Adjustment" group, click Adjust Photo Stations. This opens the UAS Adjustment Report and allows for GCP measurement.
-Alternatively, you can start by creating a New Photogrammetry Block and then proceeding to GCP measurement.
-3.2 Measure GCPs in Images
-In the "Adjust Photo Stations" command view (or the Photogrammetry Editor if using that workflow):
-The left panel will list your imported GCPs (from Step 2.1).
-The right panel will show images.
-Select a GCP from the list.
-TBC will suggest images that likely contain that GCP based on proximity to the photo stations.
-For each GCP:
-Double-click an image thumbnail to open it in the measurement view.
-Zoom in to the GCP target.
-Carefully click the center of the GCP target in the image. TBC will place a marker.
-Repeat this for at least 3-5 images per GCP, ensuring good geometric distribution (images from different angles and positions). More images are better, especially for check points.
-Use the arrow keys or image selection tools to move to other relevant images for the selected GCP.
-Ensure you are marking the exact same feature on the ground in each photo.
-Designate GCPs:
-For each GCP, in the GCP properties (often in the table below the image view or by right-clicking the GCP), set its Usage type:
-Control (XYZ): Used in the adjustment for all three coordinates.
-Control (XY): Used in the adjustment for horizontal position only.
-Control (Z): Used in the adjustment for vertical position only.
-Check Point: Not used in the adjustment calculation but used to verify its accuracy. It is crucial to have independent check points.
-Repeat for all GCPs and Check Points.
-3.3 Review and Refine Measurements
-After measuring all GCPs, review the measurements. Look for:
-Large residuals (if an initial adjustment has been run).
-Inconsistent marking.
-Points marked in too few images.
-Adjust or add measurements as necessary.
+
+    3.1 Access Adjust Photo Stations Command
+        On the Photogrammetry tab, in the "Adjustment" group, click Adjust Photo Stations . [cite: 49]
+        This opens the UAS Adjustment Report and allows for GCP measurement. [cite: 50]
+        Alternatively, you can start by creating a New Photogrammetry Block and then proceeding to GCP measurement. [cite: 51]
+
+    3.2 Measure GCPs in Images
+        In the "Adjust Photo Stations" command view (or the Photogrammetry Editor if using that workflow):
+            The left panel will list your imported GCPs (from Step 2.1). [cite: 52]
+            The right panel will show images. [cite: 53]
+        Select a GCP from the list. [cite: 53]
+        TBC will suggest images that likely contain that GCP based on proximity to the photo stations. [cite: 54]
+        For each GCP:
+            Double-click an image thumbnail to open it in the measurement view. [cite: 55]
+            Zoom in to the GCP target. [cite: 55]
+            Carefully click the center of the GCP target in the image. TBC will place a marker. [cite: 56]
+            Repeat this for at least 3-5 images per GCP, ensuring good geometric distribution (images from different angles and positions). [cite: 57]
+            More images are better, especially for check points. [cite: 58]
+        Use the arrow keys or image selection tools to move to other relevant images for the selected GCP. [cite: 58]
+        Ensure you are marking the exact same feature on the ground in each photo. [cite: 59]
+        Designate GCPs:
+            For each GCP, in the GCP properties (often in the table below the image view or by right-clicking the GCP), set its Usage type: [cite: 60]
+                Control (XYZ): Used in the adjustment for all three coordinates. [cite: 61]
+                Control (XY): Used in the adjustment for horizontal position only. [cite: 62]
+                Control (Z): Used in the adjustment for vertical position only. [cite: 63]
+                Check Point: Not used in the adjustment calculation but used to verify its accuracy. [cite: 63]
+                It is crucial to have independent check points. [cite: 64]
+        Repeat for all GCPs and Check Points. [cite: 65]
+
+    3.3 Review and Refine Measurements
+        After measuring all GCPs, review the measurements. [cite: 65]
+        Look for: [cite: 66]
+            Large residuals (if an initial adjustment has been run). [cite: 66]
+            Inconsistent marking. [cite: 66]
+            Points marked in too few images. [cite: 66]
+        Adjust or add measurements as necessary. [cite: 67]
+
 4.0 Photogrammetric Adjustment (Bundle Adjustment)
-4.1 Perform Site Calibration (If Local System is Being Derived)
-If you started with "No Projection / No Datum" or need to refine the transformation between WGS84 (drone) and your local GCPs:
-Ensure your GCPs have both WGS84 (from initial photo station estimates near them) and Local Coordinates (from your survey import).
-In Project Settings > Coordinate System, or via the Survey tab, find the Site Calibration command.
-Add your GCPs as control points, matching their WGS84 (often labeled as "Global") and Local coordinates.
-Review the calibration residuals. Adjust point pairings or disable problematic points if necessary.
-Once satisfied, Apply the calibration. This mathematically defines the relationship and transformation for your local system.
-Note: The "Adjust Photo Stations" command also incorporates aspects of this by using the GCPs to tie the WGS84-based imagery to the local system. The dedicated Site Calibration tool offers more detailed control over the coordinate system definition itself. For many drone workflows, the adjustment within the photogrammetry module handles this implicitly if GCPs have local coordinates.
-4.2 Run Bundle Adjustment
-Within the "Adjust Photo Stations" command/view:
-Review the Adjustment Settings. These may include parameters for camera calibration (self-calibration is common), weighting, and outlier rejection. Default settings are often a good starting point.
-Ensure the correct GCPs are enabled for control.
-Click Adjust or Run Adjustment.
-TBC will perform the bundle adjustment, calculating:
-Precise camera positions and orientations.
-Optimized camera parameters (if self-calibration is enabled).
-Coordinates of tie points.
-Residuals on GCPs and check points.
-4.3 Review Adjustment Report
-Carefully examine the UAS Adjustment Report:
-Overall RMS Error: Indicates the general fit of the adjustment.
-GCP Residuals: Crucial for accuracy assessment. Check X, Y, Z residuals for each control point. Investigate any large residuals – they may indicate a bad measurement in an image or an issue with the surveyed GCP coordinate.
-Check Point Residuals: These provide an independent measure of the accuracy of the final products.
-Camera Parameters: Note any changes if self-calibration was used.
-Tie Point Reprojection Error: Indicates how well the automatic tie points fit.
-If residuals are unacceptable:
-Re-measure problematic GCPs in the images.
-Disable a suspect GCP and re-run the adjustment.
-Check the original survey data for the GCPs.
-Ensure sufficient image overlap and good image quality.
-Repeat the adjustment until a satisfactory result is achieved.
-Once satisfied, Apply the adjustment. This updates the photo station positions and orientations.
+
+    4.1 Perform Site Calibration (If Local System is Being Derived)
+        If you started with "No Projection / No Datum" or need to refine the transformation between WGS84 (drone) and your local GCPs:
+            Ensure your GCPs have both WGS84 (from initial photo station estimates near them) and Local Coordinates (from your survey import). [cite: 67]
+            In Project Settings > Coordinate System , or via the Survey tab, find the Site Calibration command. [cite: 68]
+            Add your GCPs as control points, matching their WGS84 (often labeled as "Global") and Local coordinates. [cite: 69]
+        Review the calibration residuals. [cite: 69]
+        Adjust point pairings or disable problematic points if necessary. [cite: 70]
+        Once satisfied, Apply the calibration. [cite: 70]
+        This mathematically defines the relationship and transformation for your local system. [cite: 71]
+        Note: The "Adjust Photo Stations" command also incorporates aspects of this by using the GCPs to tie the WGS84-based imagery to the local system. [cite: 72]
+        The dedicated Site Calibration tool offers more detailed control over the coordinate system definition itself. [cite: 73]
+        For many drone workflows, the adjustment within the photogrammetry module handles this implicitly if GCPs have local coordinates. [cite: 74]
+
+    4.2 Run Bundle Adjustment
+        Within the "Adjust Photo Stations" command/view:
+            Review the Adjustment Settings . [cite: 75]
+            These may include parameters for camera calibration (self-calibration is common), weighting, and outlier rejection. [cite: 76]
+            Default settings are often a good starting point. [cite: 77]
+        Ensure the correct GCPs are enabled for control. [cite: 77]
+        Click Adjust or Run Adjustment . [cite: 78]
+        TBC will perform the bundle adjustment, calculating:
+            Precise camera positions and orientations. [cite: 79]
+            Optimized camera parameters (if self-calibration is enabled). [cite: 79]
+            Coordinates of tie points. [cite: 80]
+            Residuals on GCPs and check points. [cite: 80]
+
+    4.3 Review Adjustment Report
+        Carefully examine the UAS Adjustment Report :
+            Overall RMS Error: Indicates the general fit of the adjustment. [cite: 81]
+            GCP Residuals: Crucial for accuracy assessment. Check X, Y, Z residuals for each control point. [cite: 82]
+            Investigate any large residuals – they may indicate a bad measurement in an image or an issue with the surveyed GCP coordinate. [cite: 83]
+            Check Point Residuals: These provide an independent measure of the accuracy of the final products. [cite: 84]
+            Camera Parameters: Note any changes if self-calibration was used. [cite: 85]
+            Tie Point Reprojection Error: Indicates how well the automatic tie points fit. [cite: 85]
+        If residuals are unacceptable:
+            Re-measure problematic GCPs in the images. [cite: 86]
+            Disable a suspect GCP and re-run the adjustment. [cite: 87]
+            Check the original survey data for the GCPs. [cite: 87]
+            Ensure sufficient image overlap and good image quality. [cite: 88]
+        Repeat the adjustment until a satisfactory result is achieved. [cite: 88]
+        Once satisfied, Apply the adjustment. [cite: 89]
+        This updates the photo station positions and orientations. [cite: 89]
+
 5.0 Generate Photogrammetric Products
-5.1 Generate Point Cloud
-On the Photogrammetry tab, in the "Deliverables" group, click Create Point Cloud.
-In the "Create Point Cloud" dialog:
-Name: Assign a name to the point cloud.
-Region: Select the area for point cloud generation (e.g., "Entire Block" or define a polygon).
-Density: Choose the desired point density (e.g., Low, Medium, High, Ultra). Higher density takes longer and creates larger files.
-Point Cloud Type:
-Dense: Creates a detailed point cloud.
-Sparse: Creates a less dense cloud, often from the initial tie points (less common for final deliverables).
-Colorization: Ensure "Colorize Point Cloud" is checked if RGB values are desired.
-Advanced Settings: Explore options for noise filtering, smoothing, etc., if needed.
-Click Create. This process can be computationally intensive and time-consuming.
-Once complete, the point cloud will be added to your project and can be viewed and further processed (e.g., classification, cleaning).
-5.2 Generate Orthomosaic
-On the Photogrammetry tab, in the "Deliverables" group, click Create Orthomosaic.
-In the "Create Orthomosaic" dialog:
-Name: Assign a name to the orthomosaic.
-Ground Sample Distance (GSD) / Pixel Size: Specify the desired resolution for the orthomosaic. This is often related to the original image GSD.
-Surface:
-From Point Cloud: Select the dense point cloud generated in Step 5.1. This is generally recommended for the best quality digital surface model (DSM) for orthorectification.
-Alternatively, you can use a pre-existing surface or generate one on the fly, but using the photogrammetrically derived point cloud is typical.
-Region: Define the area for orthomosaic generation.
-Output Format: Choose the desired file type (e.g., GeoTIFF, JPEG). GeoTIFF is recommended for geospatial use.
-Advanced Settings:
-Blending Method: Options like "Radiometric Balancing" can improve visual consistency.
-Compression: Select if needed.
-Tiling: For large areas, consider tiling the orthomosaic.
-Click Create. This process is also computationally intensive.
-The orthomosaic will be added to your project.
+
+    5.1 Generate Point Cloud
+        On the Photogrammetry tab, in the "Deliverables" group, click Create Point Cloud . [cite: 90]
+        In the "Create Point Cloud" dialog:
+            Name: Assign a name to the point cloud. [cite: 91]
+            Region: Select the area for point cloud generation (e.g., "Entire Block" or define a polygon). [cite: 92]
+            Density: Choose the desired point density (e.g., Low, Medium, High, Ultra). Higher density takes longer and creates larger files. [cite: 93]
+            Point Cloud Type:
+                Dense: Creates a detailed point cloud. [cite: 94]
+                Sparse: Creates a less dense cloud, often from the initial tie points (less common for final deliverables). [cite: 94]
+            Colorization: Ensure "Colorize Point Cloud" is checked if RGB values are desired. [cite: 95]
+            Advanced Settings: Explore options for noise filtering, smoothing, etc., if needed. [cite: 95]
+        Click Create . [cite: 96]
+        This process can be computationally intensive and time-consuming. [cite: 96]
+        Once complete, the point cloud will be added to your project and can be viewed and further processed (e.g., classification, cleaning). [cite: 97]
+
+    5.2 Generate Orthomosaic
+        On the Photogrammetry tab, in the "Deliverables" group, click Create Orthomosaic . [cite: 98]
+        In the "Create Orthomosaic" dialog:
+            Name: Assign a name to the orthomosaic. [cite: 99]
+            Ground Sample Distance (GSD) / Pixel Size: Specify the desired resolution for the orthomosaic. [cite: 99]
+            This is often related to the original image GSD. [cite: 100]
+            Surface:
+                From Point Cloud: Select the dense point cloud generated in Step 5.1. [cite: 101]
+                This is generally recommended for the best quality digital surface model (DSM) for orthorectification. [cite: 102]
+                Alternatively, you can use a pre-existing surface or generate one on the fly, but using the photogrammetrically derived point cloud is typical. [cite: 103]
+            Region: Define the area for orthomosaic generation. [cite: 103]
+            Output Format: Choose the desired file type (e.g., GeoTIFF, JPEG). [cite: 104]
+            GeoTIFF is recommended for geospatial use. [cite: 104]
+            Advanced Settings:
+                Blending Method: Options like "Radiometric Balancing" can improve visual consistency. [cite: 105]
+                Compression: Select if needed. [cite: 105]
+                Tiling: For large areas, consider tiling the orthomosaic. [cite: 105]
+        Click Create . [cite: 106]
+        This process is also computationally intensive. [cite: 106]
+        The orthomosaic will be added to your project. [cite: 107]
+
 6.0 Quality Control (QC) and Export
-6.1 Visual Inspection
-Point Cloud:
-Check for noise, gaps, and overall completeness.
-Verify that features are well-defined.
-Use limit boxes or section views to inspect specific areas.
-Orthomosaic:
-Check for visual artifacts (e.g., smearing, ghosting, building lean if using a DSM).
-Verify color balance and consistency.
-Overlay design data or existing linework to check for positional accuracy.
-6.2 Accuracy Assessment
-Use the residuals on Check Points from the adjustment report as the primary indicator of accuracy.
-If further checks are needed, you can:
-Take independent field measurements and compare them to the point cloud or orthomosaic.
-Use TBC's measurement tools to check distances and elevations between known points.
-6.3 Export Data
-Point Cloud:
-Right-click the point cloud in Project Explorer.
-Select Export.
-Choose a suitable format (e.g., LAS, LAZ, E57, RCP).
-Orthomosaic:
-The orthomosaic is typically saved directly to the specified output location during generation. If you need to export it again or in a different format:
-Select the orthomosaic.
-Look for export options, often in the "Home" tab or by right-clicking.
-Project Report:
-Generate a project report that includes the adjustment summary, GCP residuals, and processing parameters for documentation. (File > Reports or specific reporting tools).
+
+    6.1 Visual Inspection
+        Point Cloud:
+            Check for noise, gaps, and overall completeness. [cite: 107]
+            Verify that features are well-defined. [cite: 108]
+            Use limit boxes or section views to inspect specific areas. [cite: 109]
+        Orthomosaic:
+            Check for visual artifacts (e.g., smearing, ghosting, building lean if using a DSM). [cite: 109]
+            Verify color balance and consistency. [cite: 110]
+            Overlay design data or existing linework to check for positional accuracy. [cite: 111]
+
+    6.2 Accuracy Assessment
+        Use the residuals on Check Points from the adjustment report as the primary indicator of accuracy. [cite: 112]
+        If further checks are needed, you can:
+            Take independent field measurements and compare them to the point cloud or orthomosaic. [cite: 113]
+            Use TBC's measurement tools to check distances and elevations between known points. [cite: 114]
+
+    6.3 Export Data
+        Point Cloud:
+            Right-click the point cloud in Project Explorer. [cite: 114]
+            Select Export . [cite: 115]
+            Choose a suitable format (e.g., LAS, LAZ, E57, RCP). [cite: 115]
+        Orthomosaic:
+            The orthomosaic is typically saved directly to the specified output location during generation. [cite: 116]
+            If you need to export it again or in a different format:
+                Select the orthomosaic. [cite: 117]
+                Look for export options, often in the "Home" tab or by right-clicking. [cite: 117]
+        Project Report:
+            Generate a project report that includes the adjustment summary, GCP residuals, and processing parameters for documentation. [cite: 119]
+            (File > Reports or specific reporting tools). [cite: 119]
+
 7.0 Data Management and Archiving
-Save the TBC project (.vce file).
-Archive all raw data (images, GCP survey data), the TBC project, and final deliverables in an organized manner.
-Document any deviations from this SOP and the reasons for them.
+    Save the TBC project (.vce file). [cite: 120]
+    Archive all raw data (images, GCP survey data), the TBC project, and final deliverables in an organized manner. [cite: 121]
+    Document any deviations from this SOP and the reasons for them. [cite: 121]
+
 End of SOP
